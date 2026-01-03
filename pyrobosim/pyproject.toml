@@ -7,7 +7,7 @@ name = "pyrobosim"
 version = "4.3.3"
 description = "ROS 2 enabled 2D mobile robot simulator for behavior prototyping."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
   { name = "Sebastian Castro", email = "sebas.a.castro@gmail.com" },
@@ -38,3 +38,17 @@ dev = ["pytest", "mypy"]
 
 [tool.setuptools]
 package-data = { "pyrobosim" = ["data/**"] }
+
+[tool.black]
+line-length = 160
+target-version = ["py310"]
+
+[tool.ruff]
+preview = true
+output-format = "concise"
+line-length = 160
+
+[tool.ruff.lint]
+select = ["PTH"]
+ignore = ["C405", "TD", "FIX", "TID252", "D401", "D212", "D205", "CPY", "COM812", "FBT", "FURB", "TRY003"]
+per-file-ignores = { "test/*" = ["S101", "PT013"] }

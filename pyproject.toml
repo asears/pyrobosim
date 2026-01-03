@@ -14,3 +14,17 @@ disallow_untyped_decorators = false
 explicit_package_bases = true
 implicit_reexport = true
 warn_unused_ignores = false
+
+[tool.black]
+line-length = 160
+target-version = ["py310"]
+
+[tool.ruff]
+preview = true
+output-format = "concise"
+line-length = 160
+
+[tool.ruff.lint]
+select = ["PTH"]
+ignore = ["C405", "TD", "FIX", "TID252", "D401", "D212", "D205", "CPY", "COM812", "FBT", "FURB", "TRY003"]
+per-file-ignores = { "test/*" = ["S101"] }

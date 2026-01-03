@@ -5,7 +5,7 @@ description = "ROS 2 interface to PyRoboSim."
 authors = [ { name = "Sebastian Castro", email = "sebas.a.castro@gmail.com" } ]
 readme = "README.md"
 license = { text = "MIT" }
-homepage = "https://github.com/sea-bass/pyrobosim"
+urls = { "Homepage" = "https://github.com/sea-bass/pyrobosim" }
 dependencies = [
     "pyrobosim",
 ]
