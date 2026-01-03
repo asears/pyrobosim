@@ -4,11 +4,10 @@
 Unit tests for world knowledge utilities.
 """
 
-import os
-import pytest
+
 from pytest import LogCaptureFixture
 
-from pyrobosim.core import Robot, World, WorldYamlLoader
+from pyrobosim.core import Robot
 from pyrobosim.core.types import Entity
 
 # import functions to test
@@ -19,13 +18,6 @@ from pyrobosim.utils.knowledge import (
     resolve_to_object,
 )
 from pyrobosim.utils.pose import Pose
-from pyrobosim.utils.general import get_data_folder
-
-
-def load_world() -> World:
-    """Load a test world."""
-    world_file = os.path.join(get_data_folder(), "test_world.yaml")
-    return WorldYamlLoader().from_file(world_file)
 
 
 def test_apply_resolution_strategy(caplog: LogCaptureFixture) -> None:
@@ -88,9 +80,8 @@ def test_apply_nearest_resolution_strategy(caplog: LogCaptureFixture) -> None:
     assert entity == entity_list[2]
 
 
-def test_query_to_entity(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
-
+def test_query_to_entity(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
     # Query exactly named entities
     entity = query_to_entity(test_world, ["apple0"], "object")
     assert entity.name == "apple0"
@@ -154,8 +145,8 @@ def test_query_to_entity(caplog: LogCaptureFixture) -> None:
         caplog.clear()
 
 
-def test_resolve_to_location(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
+def test_resolve_to_location(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
 
     # table0 is the first location in the test world
     loc = resolve_to_location(test_world)
@@ -176,11 +167,11 @@ def test_resolve_to_location(caplog: LogCaptureFixture) -> None:
     robot = Robot("test_robot")
     robot.set_pose(Pose(x=0.85, y=-0.5))
     nearest_loc = resolve_to_location(
-        test_world, resolution_strategy="nearest", robot=robot
+        test_world, resolution_strategy="nearest", robot=robot,
     )
     assert nearest_loc.name == "table0"
     loc = resolve_to_location(
-        test_world, category="desk", resolution_strategy="nearest", robot=robot
+        test_world, category="desk", resolution_strategy="nearest", robot=robot,
     )
     assert loc.name == "my_desk"
 
@@ -213,8 +204,8 @@ def test_resolve_to_location(caplog: LogCaptureFixture) -> None:
     )
 
 
-def test_resolve_to_object() -> None:
-    test_world = load_world()
+def test_resolve_to_object(world) -> None:
+    test_world = world
 
     # test that we can get the first object added to the world
     obj = resolve_to_object(test_world)
@@ -236,8 +227,8 @@ def test_resolve_to_object() -> None:
         assert obj.parent.parent.parent.name == room
 
 
-def test_specific_resolve_to_object() -> None:
-    test_world = load_world()
+def test_specific_resolve_to_object(world) -> None:
+    test_world = world
     # now test specific objects
 
     # set our position to be near the desk and make sure we find an object on the desk
@@ -251,25 +242,25 @@ def test_specific_resolve_to_object() -> None:
 
     # this shouldn't be the apple even though it's nearest because it doesn't fit the category
     obj = resolve_to_object(
-        test_world, category="banana", resolution_strategy="nearest", robot=robot
+        test_world, category="banana", resolution_strategy="nearest", robot=robot,
     )
     assert not (obj.category == "apple" and obj.parent.parent.name == "my_desk")
 
     # this shouldn't be the apple even though it's nearest because it doesn't fit the location
     obj = resolve_to_object(
-        test_world, location="table", resolution_strategy="nearest", robot=robot
+        test_world, location="table", resolution_strategy="nearest", robot=robot,
     )
     assert not (obj.category == "apple" and obj.parent.parent.name == "my_desk")
 
     # this shouldn't be the apple even though it's nearest because it doesn't fit the room
     obj = resolve_to_object(
-        test_world, room="bathroom", resolution_strategy="nearest", robot=robot
+        test_world, room="bathroom", resolution_strategy="nearest", robot=robot,
     )
     assert not (obj.category == "apple" and obj.parent.parent.name == "my_desk")
 
 
-def test_resolve_to_object_warnings(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
+def test_resolve_to_object_warnings(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
     robot = Robot("test_robot")
     test_world.add_robot(robot)
     caplog.clear()
@@ -317,22 +308,22 @@ def test_resolve_to_object_warnings(caplog: LogCaptureFixture) -> None:
     )
 
 
-def test_resolve_to_object_grasp() -> None:
-    test_world = load_world()
+def test_resolve_to_object_grasp(world) -> None:
+    test_world = world
     robot = Robot("test_robot")
     test_world.add_robot(robot, pose=Pose(x=2.5, y=3.5))
 
     # if we pick up the nearest object we should find it when not ignoring grasped, but not when ignoring grasped
     # test this last because it changes the state of the world
     obj_nearest = resolve_to_object(
-        test_world, resolution_strategy="nearest", robot=robot
+        test_world, resolution_strategy="nearest", robot=robot,
     )
     robot._attach_object(obj_nearest)
     obj = resolve_to_object(
-        test_world, resolution_strategy="nearest", ignore_grasped=False, robot=robot
+        test_world, resolution_strategy="nearest", ignore_grasped=False, robot=robot,
     )
     assert obj == obj_nearest
     obj = resolve_to_object(
-        test_world, resolution_strategy="nearest", ignore_grasped=True, robot=robot
+        test_world, resolution_strategy="nearest", ignore_grasped=True, robot=robot,
     )
     assert obj != obj_nearest
