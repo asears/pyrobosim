@@ -16,6 +16,7 @@
 #
 
 # Set up the environment
+# shellcheck source=/dev/null
 ENV_FILE="pyrobosim.env"
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 pushd "${SCRIPT_DIR}/.." > /dev/null

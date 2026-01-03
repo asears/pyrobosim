@@ -1,21 +1,13 @@
-from setuptools import setup, find_packages
+"""Legacy shim for setuptools while metadata is stored in pyproject.toml.
+
+This file is intentionally small to keep backward compatibility with
+installers that execute setup.py. The canonical project metadata is in
+`pyproject.toml` (PEP 621).
+"""
+
+from setuptools import setup
 
 
-project_name = "pyrobosim_ros"
-
-install_requires = [
-    "pyrobosim",
-]
-
-setup(
-    name=project_name,
-    version="4.3.3",
-    url="https://github.com/sea-bass/pyrobosim",
-    author="Sebastian Castro",
-    author_email="sebas.a.castro@gmail.com",
-    description="ROS 2 interface to PyRoboSim.",
-    license="MIT",
-    install_requires=install_requires,
-    packages=find_packages(),
-    zip_safe=True,
-)
+if __name__ == "__main__":
+    # Delegate to setuptools; the metadata will be read from pyproject.toml
+    setup()
