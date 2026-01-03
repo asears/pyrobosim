@@ -89,12 +89,12 @@ def test_delete() -> None:
 
 
 def test_create_invalid_trajectory() -> None:
+    poses = [
+        Pose(x=0.1, y=1.1, yaw=0.0),
+        Pose(x=0.2, y=1.2, yaw=np.pi / 4),
+        Pose(x=0.3, y=1.3, yaw=np.pi / 2),
+    ]
     with pytest.raises(ValueError):
-        poses = [
-            Pose(x=0.1, y=1.1, yaw=0.0),
-            Pose(x=0.2, y=1.2, yaw=np.pi / 4),
-            Pose(x=0.3, y=1.3, yaw=np.pi / 2),
-        ]
         Trajectory([0.0, 10.0], poses)
 
 

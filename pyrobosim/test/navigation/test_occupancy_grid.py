@@ -73,7 +73,7 @@ def test_world_to_grid_conversion() -> None:
     world_pt = grid.grid_to_world(orig_grid_pt)
     assert world_pt == pytest.approx((3.0, 5.0))
 
-    new_grid_pt = grid.world_to_grid((world_pt))
+    new_grid_pt = grid.world_to_grid(world_pt)
     assert new_grid_pt == orig_grid_pt
 
 

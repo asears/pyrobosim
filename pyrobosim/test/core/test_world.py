@@ -395,7 +395,7 @@ class TestWorldModeling:
     def test_is_connectable() -> None:
         """Tests if poses are connectable in a straight line."""
 
-        ## Test with a simple straight line in free space
+        # Test with a simple straight line in free space
         pose_start = Pose(x=1.0, y=0.25)
         pose_goal = Pose(x=0.5, y=1.0)
 
@@ -407,7 +407,7 @@ class TestWorldModeling:
             pose_start, pose_goal, TestWorldModeling.world, max_dist=0.5,
         )
 
-        ## Test with a straight line right near a wall
+        # Test with a straight line right near a wall
         pose_start = Pose(x=1.5, y=2.4)
         pose_goal = Pose(x=3.0, y=2.75)
 
@@ -459,7 +459,7 @@ class TestWorldModeling:
 
         original_robot_0_pose = world.robots[0].get_pose()
         original_apple_pose = world.objects[0].pose
-        for i in range(10):
+        for _ in range(10):
             world.reset(seed=seed)
             assert world.robots[0].get_pose() == original_robot_0_pose
             assert world.objects[0].pose == original_apple_pose

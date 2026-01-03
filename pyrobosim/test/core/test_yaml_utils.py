@@ -4,6 +4,7 @@
 
 import pathlib
 import tempfile
+from math import pi
 
 import numpy as np
 import pytest
@@ -357,7 +358,7 @@ class TestWorldYamlLoading:
                     "path_executor": {
                         "type": "constant_velocity",
                         "linear_velocity": 1.0,
-                        "max_angular_velocity": 3.14,
+                        "max_angular_velocity": pi,
                         "dt": 0.1,
                     },
                     "grasping": {
@@ -435,7 +436,7 @@ class TestWorldYamlLoading:
         path_executor = robot1.path_executor
         assert isinstance(path_executor, ConstantVelocityExecutor)
         assert path_executor.linear_velocity == 1.0
-        assert path_executor.max_angular_velocity == 3.14
+        assert path_executor.max_angular_velocity == pi
         assert path_executor.dt == 0.1
 
         grasp_generator = robot1.grasp_generator
@@ -513,12 +514,12 @@ def test_yaml_load_and_write_dict() -> None:
     assert robot0_dict.get("path_planner").get("type") == "rrt"
     assert robot0_dict.get("path_planner").get("collision_check_step_dist") == 0.025
     assert robot0_dict.get("path_planner").get("max_connection_dist") == 0.5
-    assert robot0_dict.get("path_planner").get("bidirectional") == True
-    assert robot0_dict.get("path_planner").get("rrt_star") == True
+    assert robot0_dict.get("path_planner").get("bidirectional") is True
+    assert robot0_dict.get("path_planner").get("rrt_star") is True
     assert robot0_dict.get("path_planner").get("rewire_radius") == 1.5
     assert robot0_dict.get("path_planner").get("max_nodes_sampled") == 1000
     assert robot0_dict.get("path_planner").get("max_time") == 2.0
-    assert robot0_dict.get("path_planner").get("compress_path") == False
+    assert robot0_dict.get("path_planner").get("compress_path") is False
     assert robot0_dict.get("path_executor").get("type") == "constant_velocity"
     assert robot0_dict.get("path_executor").get("linear_velocity") == 1.0
     assert robot0_dict.get("path_executor").get("max_angular_velocity") == 4.0
@@ -531,9 +532,9 @@ def test_yaml_load_and_write_dict() -> None:
     assert robot0_dict.get("sensors").get("lidar").get("max_angle") == 120.0
     assert robot0_dict.get("sensors").get("lidar").get("angular_resolution") == 5.0
     assert robot0_dict.get("sensors").get("lidar").get("max_range_m") == 2.0
-    assert robot0_dict.get("start_sensor_threads") == True
-    assert robot0_dict.get("partial_obs_objects") == False
-    assert robot0_dict.get("partial_obs_hallways") == False
+    assert robot0_dict.get("start_sensor_threads") is True
+    assert robot0_dict.get("partial_obs_objects") is False
+    assert robot0_dict.get("partial_obs_hallways") is False
     assert robot0_dict.get("initial_battery_level") == 100.0
     assert "action_execution_options" not in robot0_dict
 
@@ -569,12 +570,12 @@ def test_yaml_load_and_write_dict() -> None:
     assert robot1_dict.get("path_planner").get("collision_check_step_dist") == 0.025
     assert robot1_dict.get("path_planner").get("max_connection_dist") == 1.5
     assert robot1_dict.get("path_planner").get("max_nodes") == 100
-    assert robot1_dict.get("path_planner").get("compress_path") == False
+    assert robot1_dict.get("path_planner").get("compress_path") is False
     assert robot1_dict.get("path_executor").get("type") == "constant_velocity"
     assert "sensors" not in robot1_dict
-    assert robot1_dict.get("start_sensor_threads") == True
-    assert robot1_dict.get("partial_obs_objects") == False
-    assert robot1_dict.get("partial_obs_hallways") == False
+    assert robot1_dict.get("start_sensor_threads") is True
+    assert robot1_dict.get("partial_obs_objects") is False
+    assert robot1_dict.get("partial_obs_hallways") is False
     assert robot1_dict.get("initial_battery_level") == 100.0
     assert "action_execution_options" not in robot1_dict
 
@@ -601,13 +602,13 @@ def test_yaml_load_and_write_dict() -> None:
     assert robot2_dict.get("path_planner").get("grid_resolution") == 0.05
     assert robot2_dict.get("path_planner").get("grid_inflation_radius") == 0.15
     assert robot2_dict.get("path_planner").get("heuristic") == "euclidean"
-    assert robot2_dict.get("path_planner").get("diagonal_motion") == True
-    assert robot2_dict.get("path_planner").get("compress_path") == False
+    assert robot2_dict.get("path_planner").get("diagonal_motion") is True
+    assert robot2_dict.get("path_planner").get("compress_path") is False
     assert robot2_dict.get("path_executor").get("type") == "constant_velocity"
     assert "sensors" not in robot2_dict
-    assert robot2_dict.get("start_sensor_threads") == True
-    assert robot2_dict.get("partial_obs_objects") == False
-    assert robot2_dict.get("partial_obs_hallways") == False
+    assert robot2_dict.get("start_sensor_threads") is True
+    assert robot2_dict.get("partial_obs_objects") is False
+    assert robot2_dict.get("partial_obs_hallways") is False
     assert robot2_dict.get("initial_battery_level") == 95.0
     exec_opts_dict = robot2_dict.get("action_execution_options")
     assert len(exec_opts_dict) == 6
@@ -675,10 +676,9 @@ def test_yaml_load_and_write_dict() -> None:
     world.shutdown()
 
 
-def test_yaml_load_and_write_file() -> None:
+def test_yaml_load_and_write_file(world) -> None:
     """Tests round-trip loading from, and writing to, a YAML file."""
-    world_file = pathlib.Path(get_data_folder()) / "test_world_multirobot.yaml"
-    world = WorldYamlLoader().from_file(world_file)
+    world = world("test_world_multirobot.yaml")
 
     temp_file = pathlib.Path(tempfile.mkdtemp()) / "test_world.yaml"
     WorldYamlWriter().to_file(world, temp_file)

@@ -2,20 +2,9 @@
 
 """Unit tests for lidar sensor."""
 
-# import pathlib
-
 import numpy as np
 
-# import pytest
-
-from pyrobosim.core import WorldYamlLoader
 from pyrobosim.sensors.lidar import Lidar2D
-from pyrobosim.utils.general import get_data_folder
-from pyrobosim.utils.pose import Pose
-
-
-
-
 
 
 def test_lidar_2d(world) -> None:

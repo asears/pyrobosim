@@ -6,19 +6,12 @@ import tempfile
 
 import pytest
 
-from pyrobosim.core import World, WorldGazeboExporter, WorldYamlLoader
+from pyrobosim.core import WorldGazeboExporter
 from pyrobosim.utils.general import get_data_folder
 
 
-def load_world() -> World:
-    """Load a test world."""
-    world_file = pathlib.Path(get_data_folder()) / "test_world.yaml"
-    return WorldYamlLoader().from_file(world_file)
-
-
-def test_export_gazebo_default_folder() -> None:
+def test_export_gazebo_default_folder(world) -> None:
     """Exports a test world to Gazebo using the default folder."""
-    world = load_world()
 
     exporter = WorldGazeboExporter(world)
     world_folder = exporter.export()
@@ -26,9 +19,8 @@ def test_export_gazebo_default_folder() -> None:
 
 
 @pytest.mark.parametrize("classic", [True, False])  # type: ignore[misc]
-def test_export_gazebo(classic: bool) -> None:
+def test_export_gazebo(classic: bool, world) -> None:
     """Exports a test world to Gazebo using a provided output folder."""
-    world = load_world()
     output_folder = tempfile.mkdtemp()
 
     exporter = WorldGazeboExporter(world)

@@ -159,7 +159,7 @@ def test_sample_from_polygon(caplog: LogCaptureFixture) -> None:
     assert "Exceeded max polygon samples" in caplog.text
 
 
-def test_polygon_from_footprint(caplog: LogCaptureFixture) -> None:
+def test_polygon_from_footprint() -> None:
     # Box type
     footprint = {
         "type": "box",

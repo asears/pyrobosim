@@ -64,10 +64,10 @@ class TestRobot:
         assert robot.radius == pytest.approx(0.0)
         assert robot.height == pytest.approx(0.0)
         assert robot.color == pytest.approx((0.8, 0.0, 0.8))
-        assert robot.path_planner == None
-        assert robot.path_executor == None
-        assert robot.grasp_generator == None
-        assert robot.world == None
+        assert robot.path_planner is None
+        assert robot.path_executor is None
+        assert robot.grasp_generator is None
+        assert robot.world is None
         assert not robot.partial_obs_objects
         assert not robot.partial_obs_hallways
         assert robot.battery_level == 100.0

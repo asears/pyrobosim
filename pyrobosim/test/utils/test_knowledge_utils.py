@@ -4,13 +4,11 @@
 Unit tests for world knowledge utilities.
 """
 
-import pathlib
 
 from pytest import LogCaptureFixture
 
-from pyrobosim.core import Robot, World, WorldYamlLoader
+from pyrobosim.core import Robot
 from pyrobosim.core.types import Entity
-from pyrobosim.utils.general import get_data_folder
 
 # import functions to test
 from pyrobosim.utils.knowledge import (
@@ -20,12 +18,6 @@ from pyrobosim.utils.knowledge import (
     resolve_to_object,
 )
 from pyrobosim.utils.pose import Pose
-
-
-def load_world() -> World:
-    """Load a test world."""
-    world_file = pathlib.Path(get_data_folder()) / "test_world.yaml"
-    return WorldYamlLoader().from_file(world_file)
 
 
 def test_apply_resolution_strategy(caplog: LogCaptureFixture) -> None:
@@ -88,9 +80,8 @@ def test_apply_nearest_resolution_strategy(caplog: LogCaptureFixture) -> None:
     assert entity == entity_list[2]
 
 
-def test_query_to_entity(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
-
+def test_query_to_entity(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
     # Query exactly named entities
     entity = query_to_entity(test_world, ["apple0"], "object")
     assert entity.name == "apple0"
@@ -154,8 +145,8 @@ def test_query_to_entity(caplog: LogCaptureFixture) -> None:
         caplog.clear()
 
 
-def test_resolve_to_location(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
+def test_resolve_to_location(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
 
     # table0 is the first location in the test world
     loc = resolve_to_location(test_world)
@@ -213,8 +204,8 @@ def test_resolve_to_location(caplog: LogCaptureFixture) -> None:
     )
 
 
-def test_resolve_to_object() -> None:
-    test_world = load_world()
+def test_resolve_to_object(world) -> None:
+    test_world = world
 
     # test that we can get the first object added to the world
     obj = resolve_to_object(test_world)
@@ -236,8 +227,8 @@ def test_resolve_to_object() -> None:
         assert obj.parent.parent.parent.name == room
 
 
-def test_specific_resolve_to_object() -> None:
-    test_world = load_world()
+def test_specific_resolve_to_object(world) -> None:
+    test_world = world
     # now test specific objects
 
     # set our position to be near the desk and make sure we find an object on the desk
@@ -268,8 +259,8 @@ def test_specific_resolve_to_object() -> None:
     assert not (obj.category == "apple" and obj.parent.parent.name == "my_desk")
 
 
-def test_resolve_to_object_warnings(caplog: LogCaptureFixture) -> None:
-    test_world = load_world()
+def test_resolve_to_object_warnings(caplog: LogCaptureFixture, world) -> None:
+    test_world = world
     robot = Robot("test_robot")
     test_world.add_robot(robot)
     caplog.clear()
@@ -317,8 +308,8 @@ def test_resolve_to_object_warnings(caplog: LogCaptureFixture) -> None:
     )
 
 
-def test_resolve_to_object_grasp() -> None:
-    test_world = load_world()
+def test_resolve_to_object_grasp(world) -> None:
+    test_world = world
     robot = Robot("test_robot")
     test_world.add_robot(robot, pose=Pose(x=2.5, y=3.5))
 
