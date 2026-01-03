@@ -13,7 +13,7 @@ from pyrobosim.utils.pose import Pose
 def test_prm_default(world) -> None:
     """Tests planning with default world graph planner settings."""
 
-    np.random.Generator(1234)  # Fix seed for reproducibility
+    np.random.seed(1234)  # Fix seed for reproducibility
     prm = PRMPlanner()
     world.robots[0].set_path_planner(prm)
 
