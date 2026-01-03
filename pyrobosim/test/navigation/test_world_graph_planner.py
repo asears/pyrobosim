@@ -2,7 +2,8 @@
 
 """Unit tests for the World Graph planner"""
 
-import os
+import pathlib
+
 from pytest import LogCaptureFixture
 
 from pyrobosim.core import WorldYamlLoader
@@ -14,7 +15,7 @@ from pyrobosim.utils.pose import Pose
 def test_world_graph_default() -> None:
     """Tests planning with default world graph planner settings."""
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
     planner = WorldGraphPlanner()
     world.robots[0].set_path_planner(planner)
@@ -31,7 +32,7 @@ def test_world_graph_default() -> None:
 def test_world_graph_short_connection_distance(caplog: LogCaptureFixture) -> None:
     """Tests planning with short connection distance, which should fail."""
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
     planner_config = {
         "collision_check_step_dist": 0.025,

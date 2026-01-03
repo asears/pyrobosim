@@ -2,7 +2,7 @@
 
 """Unit tests for A* planner"""
 
-import os
+import pathlib
 
 from pyrobosim.core import WorldYamlLoader
 from pyrobosim.navigation.a_star import AStarPlanner
@@ -14,7 +14,7 @@ def test_astar() -> None:
     """Test A* planner with and without path compression"""
 
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
 
     start = Pose(x=-1.6, y=2.8)

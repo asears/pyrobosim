@@ -2,7 +2,8 @@
 
 """Unit tests for the PRM planner"""
 
-import os
+import pathlib
+
 import numpy as np
 from pytest import LogCaptureFixture
 
@@ -15,7 +16,7 @@ from pyrobosim.utils.pose import Pose
 def test_prm_default() -> None:
     """Tests planning with default world graph planner settings."""
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
 
     np.random.seed(1234)  # Fix seed for reproducibility
@@ -34,7 +35,7 @@ def test_prm_default() -> None:
 def test_prm_no_path(caplog: LogCaptureFixture) -> None:
     """Test that PRM gracefully returns when there is no feasible path."""
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
 
     prm = PRMPlanner()
@@ -51,7 +52,7 @@ def test_prm_no_path(caplog: LogCaptureFixture) -> None:
 def test_prm_compress_path() -> None:
     """Tests planning with path compression option."""
     world = WorldYamlLoader().from_file(
-        os.path.join(get_data_folder(), "test_world.yaml")
+        pathlib.Path(get_data_folder()) / "test_world.yaml",
     )
     planner_config = {"compress_path": False}
     prm = PRMPlanner(**planner_config)

@@ -192,8 +192,9 @@ class OccupancyGrid:
         # Write the YAML file.
         yaml_file = folder / f"{filename}.yaml"
         x_orig, y_orig = self.origin
+        # Use OS-native path string so YAML matches platform path style (important for Windows tests)
         yaml_dict = {
-            "image": pgm_file.as_posix(),
+            "image": str(pgm_file),
             "resolution": self.resolution,
             "origin": [x_orig, y_orig, 0],
             "negate": 0,

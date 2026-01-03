@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """Unit tests for world Gazebo exporting utilities."""
-import os
 import pathlib
-import pytest
 import tempfile
+
+import pytest
 
 from pyrobosim.core import World, WorldGazeboExporter, WorldYamlLoader
 from pyrobosim.utils.general import get_data_folder
@@ -12,7 +12,7 @@ from pyrobosim.utils.general import get_data_folder
 
 def load_world() -> World:
     """Load a test world."""
-    world_file = os.path.join(get_data_folder(), "test_world.yaml")
+    world_file = pathlib.Path(get_data_folder()) / "test_world.yaml"
     return WorldYamlLoader().from_file(world_file)
 
 

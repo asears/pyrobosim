@@ -2,11 +2,12 @@
 
 """Unit tests for world YAML loading and writing utilities."""
 
+import pathlib
+import tempfile
+
 import numpy as np
-import os
 import pytest
 from pytest import LogCaptureFixture
-import tempfile
 
 from pyrobosim.core.locations import Location
 from pyrobosim.core.objects import Object
@@ -77,7 +78,7 @@ class TestWorldYamlLoading:
 
     @staticmethod
     @pytest.mark.dependency(  # type: ignore[misc]
-        depends=["TestWorldYamlLoading::test_create_world_from_yaml"]
+        depends=["TestWorldYamlLoading::test_create_world_from_yaml"],
     )
     def test_create_rooms_from_yaml() -> None:
         """Tests adding rooms to a world from YAML data."""
@@ -127,17 +128,17 @@ class TestWorldYamlLoading:
         assert loader.world.rooms[1].name == "bedroom"
         poly, _ = polygon_and_height_from_footprint(rooms_dict["rooms"][1]["footprint"])
         assert loader.world.rooms[1].polygon == transform_polygon(
-            poly, Pose(x=2.625, y=3.5)
+            poly, Pose(x=2.625, y=3.5),
         )
         assert loader.world.rooms[1].wall_width == 0.2
         assert loader.world.rooms[1].viz_color == (0, 1, 0)
         assert loader.world.rooms[1].nav_poses == [
-            Pose.from_list(loader.world.rooms[1].centroid)
+            Pose.from_list(loader.world.rooms[1].centroid),
         ]
 
     @staticmethod
     @pytest.mark.dependency(  # type: ignore[misc]
-        depends=["TestWorldYamlLoading::test_create_rooms_from_yaml"]
+        depends=["TestWorldYamlLoading::test_create_rooms_from_yaml"],
     )
     def test_create_hallways_from_yaml() -> None:
         """Tests adding hallways to a world from YAML data."""
@@ -159,7 +160,7 @@ class TestWorldYamlLoading:
                     "conn_method": "auto",
                     "color": [0.5, 0.5, 0.5],
                 },
-            ]
+            ],
         }
         loader.data = hallways_dict
         loader.add_hallways()
@@ -173,7 +174,7 @@ class TestWorldYamlLoading:
 
     @staticmethod
     @pytest.mark.dependency(  # type: ignore[misc]
-        depends=["TestWorldYamlLoading::test_create_hallways_from_yaml"]
+        depends=["TestWorldYamlLoading::test_create_hallways_from_yaml"],
     )
     def test_create_locations_from_yaml(caplog: LogCaptureFixture) -> None:
         """Tests adding locations to a world from YAML data."""
@@ -190,8 +191,8 @@ class TestWorldYamlLoading:
                 {
                     "category": "table",
                     "pose": [0.85, -0.5, 0.0, -1.57],
-                }
-            ]
+                },
+            ],
         }
         loader.add_locations()
         assert len(loader.world.locations) == 0
@@ -205,8 +206,8 @@ class TestWorldYamlLoading:
                     "category": "does_not_exist",
                     "parent": "kitchen",
                     "pose": [0.85, -0.5, 0.0, -1.57],
-                }
-            ]
+                },
+            ],
         }
         loader.add_locations()
         assert len(loader.world.locations) == 0
@@ -237,7 +238,7 @@ class TestWorldYamlLoading:
         assert loader.world.locations[0].category == "table"
         assert loader.world.locations[0].parent.name == "kitchen"
         assert loader.world.locations[0].pose == Pose.from_list(
-            [0.85, -0.5, 0.0, -1.57]
+            [0.85, -0.5, 0.0, -1.57],
         )
 
         assert loader.world.locations[1].name == "test_desk"
@@ -247,7 +248,7 @@ class TestWorldYamlLoading:
 
     @staticmethod
     @pytest.mark.dependency(  # type: ignore[misc]
-        depends=["TestWorldYamlLoading::test_create_locations_from_yaml"]
+        depends=["TestWorldYamlLoading::test_create_locations_from_yaml"],
     )
     def test_create_objects_from_yaml(caplog: LogCaptureFixture) -> None:
         """Tests adding objects to a world from YAML data."""
@@ -265,8 +266,8 @@ class TestWorldYamlLoading:
                     "category": "does_not_exist",
                     "parent": "table0",
                     "pose": [3.2, 3.5, 0.0, 0.707],
-                }
-            ]
+                },
+            ],
         }
         loader.add_objects()
         assert len(loader.world.objects) == 0
@@ -305,7 +306,7 @@ class TestWorldYamlLoading:
 
     @staticmethod
     @pytest.mark.dependency(  # type: ignore[misc]
-        depends=["TestWorldYamlLoading::test_create_objects_from_yaml"]
+        depends=["TestWorldYamlLoading::test_create_objects_from_yaml"],
     )
     def test_create_robots_from_yaml() -> None:
         """Tests adding robots to a world from YAML data."""
@@ -470,7 +471,7 @@ class TestWorldYamlLoading:
 
 def test_yaml_load_and_write_dict() -> None:
     """Tests round-trip loading from, and writing to, a YAML dictionary."""
-    world_file = os.path.join(get_data_folder(), "test_world_multirobot.yaml")
+    world_file = pathlib.Path(get_data_folder()) / "test_world_multirobot.yaml"
     world = WorldYamlLoader().from_file(world_file)
     world_dict = WorldYamlWriter().to_dict(world)
 
@@ -482,10 +483,10 @@ def test_yaml_load_and_write_dict() -> None:
 
     assert "metadata" in world_dict
     assert world_dict["metadata"].get("locations") == list(
-        [str(loc) for loc in Location.metadata.sources]
+        [str(loc) for loc in Location.metadata.sources],
     )
     assert world_dict["metadata"].get("objects") == list(
-        [str(obj) for obj in Object.metadata.sources]
+        [str(obj) for obj in Object.metadata.sources],
     )
 
     assert "robots" in world_dict
@@ -676,10 +677,10 @@ def test_yaml_load_and_write_dict() -> None:
 
 def test_yaml_load_and_write_file() -> None:
     """Tests round-trip loading from, and writing to, a YAML file."""
-    world_file = os.path.join(get_data_folder(), "test_world_multirobot.yaml")
+    world_file = pathlib.Path(get_data_folder()) / "test_world_multirobot.yaml"
     world = WorldYamlLoader().from_file(world_file)
 
-    temp_file = os.path.join(tempfile.mkdtemp(), "test_world.yaml")
+    temp_file = pathlib.Path(tempfile.mkdtemp()) / "test_world.yaml"
     WorldYamlWriter().to_file(world, temp_file)
 
     reloaded_world = WorldYamlLoader().from_file(temp_file)

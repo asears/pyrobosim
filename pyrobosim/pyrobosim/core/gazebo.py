@@ -1,19 +1,19 @@
 """Utilities to export worlds to Gazebo."""
 
-import shutil
 import itertools
 import pathlib
-from shapely.geometry import LineString, Polygon, MultiPolygon
+import shutil
+
+from shapely.geometry import LineString, MultiPolygon, Polygon
 from shapely.ops import split
 
+from ..utils.general import get_data_folder, replace_special_yaml_tokens
 from .hallway import Hallway
 from .locations import Location
 from .objects import Object
 from .room import Room
 from .types import Entity
 from .world import World
-from ..utils.general import get_data_folder, replace_special_yaml_tokens
-
 
 FOUR_SPACES = " " * 4
 EIGHT_SPACES = " " * 8
@@ -178,7 +178,7 @@ class WorldGazeboExporter:
                     )
                     loc_model_text = loc_model_text.replace("$LINKS", loc_link_text)
                     loc_model_text = loc_model_text.replace("$STATIC", "0")
-                    with open(
+                    with pathlib.Path.open(
                         self.out_folder / entity.category / "model.sdf", "w"
                     ) as f:
                         f.write(loc_model_text)
@@ -187,7 +187,7 @@ class WorldGazeboExporter:
                     config_text = self.model_config_template_text.replace(
                         "$NAME", entity.category
                     )
-                    with open(
+                    with pathlib.Path.open(
                         self.out_folder / entity.category / "model.config",
                         "w",
                     ) as f:

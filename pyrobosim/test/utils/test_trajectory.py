@@ -119,7 +119,7 @@ def test_get_constant_speed_trajectory_unlimited_ang_vel() -> None:
             Pose(x=1.0, y=0.0),
             Pose(x=1.0, y=1.0, yaw=np.pi / 2.0),
             Pose(x=0.0, y=1.0, yaw=-3.0 * np.pi / 4.0),
-        ]
+        ],
     )
     traj = get_constant_speed_trajectory(path, linear_velocity=0.5)
 
@@ -135,10 +135,10 @@ def test_get_constant_speed_trajectory_limited_ang_vel() -> None:
             Pose(x=1.0, y=0.0),
             Pose(x=1.0, y=1.0, yaw=np.pi / 2.0),
             Pose(x=0.0, y=1.0, yaw=-3.0 * np.pi / 4.0),
-        ]
+        ],
     )
     traj = get_constant_speed_trajectory(
-        path, linear_velocity=0.5, max_angular_velocity=np.pi / 8
+        path, linear_velocity=0.5, max_angular_velocity=np.pi / 8,
     )
 
     assert traj.num_points() == 4
@@ -153,7 +153,7 @@ def test_interpolate_trajectory() -> None:
             Pose(x=1.0, y=0.0),
             Pose(x=1.0, y=1.0, yaw=np.pi / 2.0),
             Pose(x=0.0, y=1.0, yaw=-3.0 * np.pi / 4.0),
-        ]
+        ],
     )
     traj = get_constant_speed_trajectory(path, linear_velocity=1.0)
     interpolated_traj = interpolate_trajectory(traj, dt=0.1)
@@ -171,7 +171,7 @@ def test_interpolate_trajectory_duplicate_points(caplog: LogCaptureFixture) -> N
             Pose(x=1.0, y=1.0, yaw=np.pi / 2.0),
             Pose(x=0.0, y=1.0, yaw=-3.0 * np.pi / 4.0),
             Pose(x=0.0, y=1.0, yaw=-3.0 * np.pi / 4.0),  # Duplicate
-        ]
+        ],
     )
     traj = get_constant_speed_trajectory(path, linear_velocity=1.0)
     interpolated_traj = interpolate_trajectory(traj, dt=0.1)
